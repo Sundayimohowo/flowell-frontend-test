@@ -23,6 +23,14 @@ export function loginApi(
   });
 }
 
+export function adminLoginApi(
+  payload: UserLoginPayloadType
+): Promise<{ data: { data: { token: string; user: UserType } } }> {
+  return axios.post("/auth/admin/login", payload, {
+    baseURL: `${baseApi.v1}`,
+  });
+}
+
 export function logoutApi(): Promise<{ data: UserType }> {
   return axios.get("/auth/logout", {
     baseURL: `${baseApi.v1}`,

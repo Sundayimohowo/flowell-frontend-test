@@ -17,7 +17,7 @@ const userLoginSchema = z.object({
   password: z.string().nonempty(),
 });
 
-export default function AdminAuth() {
+export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [toastMessage, setToastMessage] = useState<{
     message: string;
