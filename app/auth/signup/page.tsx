@@ -82,14 +82,7 @@ export default function SignUp() {
       const { confirmPassword, ...payload } = form;
 
       signUpApi({ ...payload, roles: [] })
-        .then((res) => {
-          console.log("🚀 ~ file: page.tsx:80 ~ .then ~ res:", res);
-        })
         .catch((err) => {
-          console.log(
-            "🚀 ~ file: page.tsx:89 ~ handleSubmit ~ err:",
-            err?.response?.data?.message
-          );
           setSignupError({
             message:
               err?.response?.data?.message || "Error occured during signup",
