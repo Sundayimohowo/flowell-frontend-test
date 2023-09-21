@@ -31,6 +31,14 @@ export function adminLoginApi(
   });
 }
 
+export function resetPasswordApi(payload: {
+  email: string;
+}): Promise<{ data: { message: string; statusCode: number } }> {
+  return axios.post("/auth/reset", payload, {
+    baseURL: `${baseApi.v1}`,
+  });
+}
+
 export function logoutApi(): Promise<{ data: UserType }> {
   return axios.get("/auth/logout", {
     baseURL: `${baseApi.v1}`,

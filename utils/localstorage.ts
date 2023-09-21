@@ -14,3 +14,11 @@ export function retrieveStoreItem<T>(key: LocalStorageKeys): T | null {
 
   return null;
 }
+
+export function deleteStoreItem<T>(key: LocalStorageKeys) {
+  localStorage.removeItem(key);
+}
+
+export function clearStoreItems<T>(key: LocalStorageKeys) {
+  localStorage.clear();
+}
