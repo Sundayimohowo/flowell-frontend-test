@@ -10,7 +10,7 @@ export function updateStoreItem<T>(key: LocalStorageKeys, value: T) {
 export function retrieveStoreItem<T>(key: LocalStorageKeys): T | null {
   const data = localStorage.getItem(key);
 
-  if (!!data) return JSON.parse(data);
+  if (!!data) return JSON.parse(data) as T;
 
   return null;
 }

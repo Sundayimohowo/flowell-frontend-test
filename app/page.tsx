@@ -1,17 +1,27 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 import { fetchProductsApi } from "@/api/products.api";
 import { IPagination } from "@/interfaces/page.info";
 import { ProductType } from "@/interfaces/products";
-import Image from "next/image";
+import { addProductToCart } from "@/utils/cart";
+import {
+  LocalStorageKeys,
+  retrieveStoreItem,
+  updateStoreItem,
+} from "@/utils/localstorage";
+import { UserType } from "@/interfaces/user";
+import { fetchCartApi } from "@/api/carts.api";
+import { CartType } from "@/interfaces/carts";
 
 export default function Home() {
+  let searchResponseCount = 0;
+
   const [loading, setLoading] = useState(false);
   const [showAddToCart, setShowAddToCart] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  let searchResponseCount = 0;
   const [currentProductId, setCurrentProductId] = useState("");
   const [uniqueProducts] = useState<Record<string, ProductType>>({});
   const [pageOptions, setPageOptions] = useState<{
@@ -24,6 +34,8 @@ export default function Home() {
     pageInfo: { hasNext: false, hasPrevious: false, next: "", previous: "" },
   });
 
+  const authUser = retrieveStoreItem<UserType>(LocalStorageKeys.AUTH);
+
   const handleShowCartBtn = (id: string) => {
     setShowAddToCart(true);
     setCurrentProductId(id);
@@ -35,8 +47,13 @@ export default function Home() {
   };
 
   const handleAddToCart = (id: string) => {
-    // TODO: add to cart
-    console.log("🚀 ~ file: page.tsx:25 ~ handleAddToCart ~ id:", id);
+    // add to cart
+    if (authUser?.id) {
+      addProductToCart(id, authUser?.id!);
+    } else {
+      // TODO: redirect to login page
+      window.location.assign("/auth/login");
+    }
   };
 
   const handleSearchChange = (e: any) => {
@@ -59,8 +76,32 @@ export default function Home() {
   };
 
   useEffect(() => {
+    // const cart = retrieveStoreItem<CartType>(LocalStorageKeys.CART);
+    if (authUser?.id /* && !cart*/) {
+      // user is authenticated
+      fetchCartApi(authUser?.id)
+        .then((res: { data: { data: CartType } } & { status?: number }) => {
+          if (res?.status === 200) {
+            // initialize cart
+            // Get Cart from backend and initialize on login
+            const cart = {
+              user: res?.data?.data.user,
+              items: res?.data?.data.items,
+              total: res?.data?.data.total,
+            };
+
+            updateStoreItem(LocalStorageKeys.CART, cart);
+          }
+        })
+        .catch((error) => {
+          console.log("🚀 ~ file: page.tsx:78 ~ .Cart ~ error:", error);
+        });
+    }
+  }, [authUser]);
+
+  useEffect(() => {
     // TODO: search the database if not found in the already fetched data
-    if (!searchResponseCount) {
+    if (!searchResponseCount && searchQuery) {
       // TODO: Make search API call
       console.log("Nothing was found!");
     }
@@ -108,7 +149,7 @@ export default function Home() {
               className="w-[24px] h-[24px] grid"
             >
               <path
-                fill-rule="evenodd"
+                fillRule="evenodd"
                 d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
                 clip-rule="evenodd"
               />

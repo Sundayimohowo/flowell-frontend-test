@@ -17,7 +17,9 @@ export function signUpApi(
 
 export function loginApi(
   payload: UserLoginPayloadType
-): Promise<{ data: { data: { token: string; user: UserType } } }> {
+): Promise<{
+  data: { data: { token: string; user: UserType & { _id: string } } };
+}> {
   return axios.post("/auth/login", payload, {
     baseURL: `${baseApi.v1}`,
   });

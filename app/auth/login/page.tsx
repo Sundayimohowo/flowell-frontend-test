@@ -61,6 +61,7 @@ export default function Login() {
             lastName: res?.data?.data?.user?.lastName,
             roles: res?.data?.data?.user?.roles,
             email: res?.data?.data?.user?.email,
+            id: res?.data?.data?.user?._id,
             token: res?.data?.data?.token,
           };
           updateStoreItem(LocalStorageKeys.AUTH, payload);
