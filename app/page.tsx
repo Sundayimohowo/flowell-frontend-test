@@ -170,7 +170,7 @@ export default function Home() {
                   </s>
                 </div>
 
-                <div className="h-10 bg-white mt-3 p-2">
+                <div className="h-12 mt-3 p-2">
                   <button
                     onClick={() => handleAddToCart(product._id)}
                     className={`btn bg-green-500 text-white py-2 px-4 font-md w-full font-extrabold rounded-lg border-none ${
