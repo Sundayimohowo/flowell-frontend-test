@@ -2,6 +2,7 @@
 
 import { signUpApi } from "@/api/auth.api";
 import Toast from "@/components/Toast";
+import Link from "next/link";
 import { useState } from "react";
 import { ZodError, z } from "zod";
 
@@ -265,6 +266,16 @@ export default function SignUp() {
             >
               {submitting ? "Submitting..." : "Submit"}
             </button>
+          </div>
+
+          <div className="text-sm my-0.5 text-center text-gray-600">
+            Have an account already?{" "}
+            <Link
+              href={"/auth/login"}
+              className="font-semibold text-indigo-600 hover:text-success-200 underline underline-offset-2"
+            >
+              Signin instead.
+            </Link>
           </div>
         </form>
       </div>

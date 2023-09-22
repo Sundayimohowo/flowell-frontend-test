@@ -6,6 +6,7 @@ import { ZodError, z } from "zod";
 import { loginApi } from "@/api/auth.api";
 import Toast from "@/components/Toast";
 import { LocalStorageKeys, updateStoreItem } from "@/utils/localstorage";
+import Link from "next/link";
 
 type LoginFormType = {
   email: string;
@@ -152,12 +153,12 @@ export default function Login() {
                 Password
               </label>
               <div className="text-sm">
-                <a
-                  href="#"
-                  className="font-semibold text-indigo-600 hover:text-indigo-500"
+                <Link
+                  href={"/auth/reset"}
+                  className="font-semibold text-indigo-600 hover:text-indigo-500 my-3"
                 >
                   Forgot password?
-                </a>
+                </Link>
               </div>
             </div>
             <div className="mt-2">
@@ -186,6 +187,16 @@ export default function Login() {
             >
               {isLoading ? "Loading..." : "Sign in"}
             </button>
+          </div>
+
+          <div className="text-sm my-0.5 text-center text-gray-600">
+            Don't have an account?{" "}
+            <Link
+              href={"/auth/signup"}
+              className="font-semibold text-indigo-600 hover:text-success-200 underline underline-offset-2"
+            >
+              Signup instead.
+            </Link>
           </div>
         </form>
       </div>

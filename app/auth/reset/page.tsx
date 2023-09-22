@@ -5,6 +5,7 @@ import { ZodError, z } from "zod";
 
 import { resetPasswordApi } from "@/api/auth.api";
 import Toast from "@/components/Toast";
+import Link from "next/link";
 
 type LoginFormType = {
   email: string;
@@ -134,10 +135,19 @@ export default function Login() {
             <button
               type="submit"
               disabled={isLoading}
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3p-2  py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 p-2  py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              {isLoading ? "Loading..." : "Sign in"}
+              {isLoading ? "Loading..." : "Reset"}
             </button>
+          </div>
+
+          <div className="text-sm my-0.5 text-right pr-5">
+            <Link
+              href={"/auth/login"}
+              className="font-semibold text-indigo-600 hover:text-success-200 underline underline-offset-2"
+            >
+              Login instead.
+            </Link>
           </div>
         </form>
       </div>
