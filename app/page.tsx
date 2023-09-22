@@ -10,6 +10,8 @@ import Image from "next/image";
 export default function Home() {
   const [loading, setLoading] = useState(false);
   const [showAddToCart, setShowAddToCart] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  let searchResponseCount = 0;
   const [currentProductId, setCurrentProductId] = useState("");
   const [uniqueProducts] = useState<Record<string, ProductType>>({});
   const [pageOptions, setPageOptions] = useState<{
@@ -36,6 +38,33 @@ export default function Home() {
     // TODO: add to cart
     console.log("🚀 ~ file: page.tsx:25 ~ handleAddToCart ~ id:", id);
   };
+
+  const handleSearchChange = (e: any) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const searchProductHandler = (product: ProductType) => {
+    const query = searchQuery.toLowerCase();
+    const hasName = product.name.toLowerCase().includes(query);
+    const hasId = product._id === searchQuery;
+    const hasDesc = product.description.toLowerCase().includes(query);
+    const isPrice = product.price === +searchQuery;
+
+    //
+    if (hasName || hasDesc || hasId || isPrice) {
+      searchResponseCount++;
+      return true;
+    }
+    return false;
+  };
+
+  useEffect(() => {
+    // TODO: search the database if not found in the already fetched data
+    if (!searchResponseCount) {
+      // TODO: Make search API call
+      console.log("Nothing was found!");
+    }
+  }, [searchQuery]);
 
   useEffect(() => {
     setLoading(true);
@@ -66,11 +95,41 @@ export default function Home() {
 
   return (
     <main>
+      <div className="w-full h-25 bg-white px-5">
+        <form className="search_form bg-white px-4 flex gap-4 justify-center align-center my-4 mt-7 w-full md:w-[400px] mx-auto shadow-sm ring-1 ring-inset ring-gray-300 py-2 px-2 rounded-full">
+          <label
+            htmlFor="search"
+            className="grid align-center text-sm h-[24px] my-auto font-medium leading-6 text-gray-900"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              className="w-[24px] h-[24px] grid"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </label>
+
+          <input
+            id="search"
+            name="search"
+            type="search"
+            placeholder="Search products..."
+            onChange={handleSearchChange}
+            className="block w-full rounded-md border-none p-2 outline-none focus:ring-white sm:leading-3  md:leading-3  py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          />
+        </form>
+      </div>
       <div
         role="list"
-        className="flex gap-4 flex-wrap pb-10 justify-center md:justify-start"
+        className="flex gap-4 flex-wrap pb-10 pt-1 justify-center md:justify-start"
       >
-        {products.data.map((product) => (
+        {products.data.filter(searchProductHandler).map((product) => (
           <div
             className={`product_wrapper w-[300px] h-max-[440px] bg-[#fcfcfc] rounded-md ${
               showAddToCart && product._id === currentProductId
@@ -79,8 +138,6 @@ export default function Home() {
             }`}
             key={product._id}
             role="listitem"
-            // onMouseOver={() => console.log("Mouse over\t", product._id)}
-            // onMouseLeave={() => console.log("Mouse leave\t", product._id)}
             onMouseOver={() => handleShowCartBtn(product._id)}
             onMouseLeave={() => handleHideCartBtn(product._id)}
           >
